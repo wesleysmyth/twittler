@@ -15,10 +15,20 @@
         while(index >= 0){
           var tweet = streams.home[index];
           var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
+          $tweet.text('@' + tweet.user + ': ' + tweet.message + " " + tweet.created_at);
           $tweet.appendTo($body);
           index -= 1;
         }
+
+        setInterval(function(){
+          index = streams.home.length - 1;
+          var tweet = streams.home[index];
+          var $tweet = $('<div></div>');
+          $tweet.text('@' + tweet.user + ': ' + tweet.message  + " " + tweet.created_at);
+          $tweet.appendTo($body);
+          $('div:first-child').remove();
+        }, 3000);
+
 
       });
 
