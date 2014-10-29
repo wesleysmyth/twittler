@@ -1,17 +1,32 @@
 <!DOCTYPE html>
 <html>
   <head>
+  <!-- Add moment.js library to parse dates -->
+    <script src="moment.js"></script>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
-    <!-- Add moment.js library to parse dates -->
-    <script src="moment.js"></script>
+    <script>
+    var loginCount = 0;
+        //Login function to store visitor variable
+        var login = function() {
+            visitor = prompt("Please enter your name");
+            loginCount++;
+            // if user does not already exist...If user does exist, if they log back in, they will add to their stream of tweets
+            if (!streams.users[visitor]) {
+              streams.users[visitor] = [visitor];
+              window.users[visitor] = [visitor];
+            }
+          };
+
+    </script>
   </head>
   <body>
 
     <script>
 
       $(document).ready(function(){
-        var $body = $('body');
+        var $body = $('body'),
+            visitor;
         $body.html('');
 
         // create function for tweet timeline
@@ -19,7 +34,6 @@
             $("a").click(function(user) {
           var handle = user.target.text.slice(1),
               length = streams.users[handle].length,
-              user = streams.users[handle][0].user,
               userTweets = [];
 
           // remove previous user's timeline
@@ -29,13 +43,14 @@
             var userTweet = streams.users[handle][i].message;
             if (allTweetedTweets.indexOf(userTweet) >= 0 || allTweetedTweets.indexOf(" " + userTweet) >= 0) {
               userTweets.push(userTweet);
-              $("#timeline").append("<p>" + user + " tweeted " + userTweet + " tweeted " + moment(streams.users[handle][i].created_at).fromNow() + "</p>");
+              $("#timeline").append("<p>" + handle + " tweeted " + "<i>" + userTweet + "</i>" + " " + moment(streams.users[handle][i].created_at).fromNow() + "</p>");
             }
            }
           });
           },// end tweet timeline function
           allTweetedTweets = [],
           index = streams.home.length - 1;
+            
 
         while(index >= 0){
           var tweet = streams.home[index];
@@ -49,17 +64,22 @@
           // call tweet timeline function to enable timeline display for pretweets
           timelineFunc();
 
-          // Add 
-        $body.append("<div id='timeline' style='padding-top: 40px;'>To see a user's timeline, click on their handle</div>");
-        
+          // Add input fields
+        $body.append("<div id='tweetinput' style='padding-top: 40px;'>Tweet Here!<form><input id='sub' type='text'><input type='submit' value='Tweet it, dude'></form><br><br><button onclick='login()'>Login</button><br></div><div id='timeline' style='padding-top: 40px;'>To see a user's timeline, click on their handle</div>");
+
+        // generate random tweets every 3 seconds
         setInterval(function(){
+          
           index = streams.home.length - 1;
           var tweet = streams.home[index],
               $tweet = $('<div></div>');
+
+              // make sure randomly generated tweet is not vistor tweet
+          if (streams.home[index].user === "shawndrost" || streams.home[index].user === "sharksforcheap" || streams.home[index].user === "mracus" || streams.home[index].user === "douglascalhoun") {
           $tweet.html('<a class="posttweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + tweet.message  + " " + moment(tweet.created_at).fromNow());
 
           // add latest tweet
-          $("#timeline").before($tweet);
+          $("#tweetinput").before($tweet);
 
           // push latest tweet to all tweets array
           allTweetedTweets.push(tweet.message);
@@ -70,7 +90,43 @@
           // call tweet timeline function to enable timeline display for posttweets
           timelineFunc();
 
+        }
+
         }, 3000); 
+
+
+        // Add login button and tweet button.  If user has not logged in, ask them to log in first.  Once logged in allow tweet functionality.  Prompt sets visitor value...
+        $('form').submit(function() {
+
+          if (loginCount === 0) {
+            alert("You must be joking...How do you expect to tweet if you don't log in?");
+          }
+
+          var buttonValue = $("#sub").val();
+          writeTweet(buttonValue);
+
+          index = streams.home.length - 1;
+          var  tweet = streams.home[index],
+              $tweet = $('<div></div>');
+
+          tweet.created_at = new Date();
+
+          $tweet.html('<a class="visitortweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + tweet.message  + " " + moment(tweet.created_at).fromNow());
+
+          // add latest tweet
+          $("#tweetinput").before($tweet);
+
+          // push latest tweet to all tweets array
+          allTweetedTweets.push(tweet.message);
+
+          // remove first tweet 
+          $('div:first-child').remove();
+
+          // call tweet timeline function to enable timeline display for visitors
+          timelineFunc();
+
+        });
+
 
       });
 
