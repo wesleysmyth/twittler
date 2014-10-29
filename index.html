@@ -3,6 +3,8 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <!-- Add moment.js library to parse dates -->
+    <script src="moment.js"></script>
   </head>
   <body>
 
@@ -27,7 +29,7 @@
             var userTweet = streams.users[handle][i].message;
             if (allTweetedTweets.indexOf(userTweet) >= 0 || allTweetedTweets.indexOf(" " + userTweet) >= 0) {
               userTweets.push(userTweet);
-              $("#timeline").append("<p>" + user + " tweeted " + userTweet + " tweeted at " + streams.users[handle][i].created_at + "</p>");
+              $("#timeline").append("<p>" + user + " tweeted " + userTweet + " tweeted " + moment(streams.users[handle][i].created_at).fromNow() + "</p>");
             }
            }
           });
@@ -38,7 +40,7 @@
         while(index >= 0){
           var tweet = streams.home[index];
           var $tweet = $('<div></div>');
-          $tweet.html('<a class="pretweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + tweet.message + " " + tweet.created_at);
+          $tweet.html('<a class="pretweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + tweet.message + " " + moment(tweet.created_at).fromNow());
           $tweet.appendTo($body);
           allTweetedTweets.push(tweet.message);
           index -= 1;
@@ -54,7 +56,7 @@
           index = streams.home.length - 1;
           var tweet = streams.home[index],
               $tweet = $('<div></div>');
-          $tweet.html('<a class="posttweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + tweet.message  + " " + tweet.created_at);
+          $tweet.html('<a class="posttweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + tweet.message  + " " + moment(tweet.created_at).fromNow());
 
           // add latest tweet
           $("#timeline").before($tweet);
