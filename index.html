@@ -5,33 +5,74 @@
     <script src="data_generator.js"></script>
   </head>
   <body>
+
     <script>
 
       $(document).ready(function(){
         var $body = $('body');
         $body.html('');
 
-        var index = streams.home.length - 1;
+        // create function for tweet timeline
+        var timelineFunc = function() {
+            $("a").click(function(user) {
+          var handle = user.target.text.slice(1),
+              length = streams.users[handle].length,
+              user = streams.users[handle][0].user,
+              userTweets = [];
+
+          // remove previous user's timeline
+           $("#timeline p").remove();
+
+           for (var i = 0, x = length; i < x; i+=1) {
+            var userTweet = streams.users[handle][i].message;
+            if (allTweetedTweets.indexOf(userTweet) >= 0 || allTweetedTweets.indexOf(" " + userTweet) >= 0) {
+              userTweets.push(userTweet);
+              $("#timeline").append("<p>" + user + " tweeted " + userTweet + " tweeted at " + streams.users[handle][i].created_at + "</p>");
+            }
+           }
+          });
+          },// end tweet timeline function
+          allTweetedTweets = [],
+          index = streams.home.length - 1;
+
         while(index >= 0){
           var tweet = streams.home[index];
           var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message + " " + tweet.created_at);
+          $tweet.html('<a class="pretweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + tweet.message + " " + tweet.created_at);
           $tweet.appendTo($body);
+          allTweetedTweets.push(tweet.message);
           index -= 1;
         }
 
+          // call tweet timeline function to enable timeline display for pretweets
+          timelineFunc();
+
+          // Add 
+        $body.append("<div id='timeline' style='padding-top: 40px;'>To see a user's timeline, click on their handle</div>");
+        
         setInterval(function(){
           index = streams.home.length - 1;
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message  + " " + tweet.created_at);
-          $tweet.appendTo($body);
-          $('div:first-child').remove();
-        }, 3000);
+          var tweet = streams.home[index],
+              $tweet = $('<div></div>');
+          $tweet.html('<a class="posttweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + tweet.message  + " " + tweet.created_at);
 
+          // add latest tweet
+          $("#timeline").before($tweet);
+
+          // push latest tweet to all tweets array
+          allTweetedTweets.push(tweet.message);
+
+          // remove first tweet 
+          $('div:first-child').remove();
+
+          // call tweet timeline function to enable timeline display for posttweets
+          timelineFunc();
+
+        }, 3000); 
 
       });
 
     </script>
+    
   </body>
 </html>
