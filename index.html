@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <!-- Add moment.js library to parse dates -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <!-- Add moment.js library to parse dates -->
     <script src="moment.js"></script>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
@@ -16,6 +18,15 @@
               streams.users[visitor] = [visitor];
               window.users[visitor] = [visitor];
             }
+
+            // Remove existing logged in user...
+            $('span').remove();
+
+            // Show visitor logged in...
+            $('button').after("<span style='display:none'>  You are now logged in as " + visitor + ".</span>");
+
+            $('span').fadeIn('slow');
+
           };
 
     </script>
@@ -54,8 +65,8 @@
 
         while(index >= 0){
           var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.html('<a class="pretweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + tweet.message + " " + moment(tweet.created_at).fromNow());
+          var $tweet = $('<div class="tweets"></div>');
+          $tweet.html('<a class="pretweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + '<i>' + tweet.message + '</i>' + " " + moment(tweet.created_at).fromNow());
           $tweet.appendTo($body);
           allTweetedTweets.push(tweet.message);
           index -= 1;
@@ -72,11 +83,11 @@
           
           index = streams.home.length - 1;
           var tweet = streams.home[index],
-              $tweet = $('<div></div>');
+              $tweet = $('<div class="tweets"></div>');
 
               // make sure randomly generated tweet is not vistor tweet
           if (streams.home[index].user === "shawndrost" || streams.home[index].user === "sharksforcheap" || streams.home[index].user === "mracus" || streams.home[index].user === "douglascalhoun") {
-          $tweet.html('<a class="posttweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + tweet.message  + " " + moment(tweet.created_at).fromNow());
+          $tweet.html('<a class="posttweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + '<i>' + tweet.message + '</i>' + " " + moment(tweet.created_at).fromNow());
 
           // add latest tweet
           $("#tweetinput").before($tweet);
@@ -107,11 +118,11 @@
 
           index = streams.home.length - 1;
           var  tweet = streams.home[index],
-              $tweet = $('<div></div>');
+              $tweet = $('<div class="tweets"></div>');
 
           tweet.created_at = new Date();
 
-          $tweet.html('<a class="visitortweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + tweet.message  + " " + moment(tweet.created_at).fromNow());
+          $tweet.html('<a class="visitortweets" href="#">' + '@' + tweet.user + '</a>' + ': ' + '<i>' + tweet.message + '</i>' + " " + moment(tweet.created_at).fromNow());
 
           // add latest tweet
           $("#tweetinput").before($tweet);
