@@ -12,20 +12,36 @@
         //Login function to store visitor variable
         var login = function() {
             visitor = prompt("Please enter your name");
-            loginCount++;
-            // if user does not already exist...If user does exist, if they log back in, they will add to their stream of tweets
-            if (!streams.users[visitor]) {
-              streams.users[visitor] = [visitor];
-              window.users[visitor] = [visitor];
+
+            if (visitor === null || visitor === ''){
+              alert("You must be joking...How do you expect to tweet if you don't log in?");
+
+              $('span').remove();
+
+              // Show visitor logged in...
+              $('button').after("<span style='display:none'>  You are currently logged out.  You will need to enter your name to tweet!</span>");
+
+              $('span').fadeIn('slow');
             }
 
-            // Remove existing logged in user...
-            $('span').remove();
+            else {
 
-            // Show visitor logged in...
-            $('button').after("<span style='display:none'>  You are now logged in as " + visitor + ".</span>");
+              loginCount++;
+              // if user does not already exist...If user does exist, if they log back in, they will add to their stream of tweets
+              if (!streams.users[visitor]) {
+                streams.users[visitor] = [visitor];
+                window.users[visitor] = [visitor];
+              }
 
-            $('span').fadeIn('slow');
+              // Remove existing logged in user...
+              $('span').remove();
+
+              // Show visitor logged in...
+              $('button').after("<span style='display:none'>  You are now logged in as " + visitor + ".</span>");
+
+              $('span').fadeIn('slow');
+
+            }
 
           };
 
@@ -76,7 +92,7 @@
           timelineFunc();
 
           // Add input fields
-        $body.append("<div id='tweetinput' style='padding-top: 40px;'>Tweet Here!<form><input id='sub' type='text'><input type='submit' value='Tweet it, dude'></form><br><br><button onclick='login()'>Login</button><br></div><div id='timeline' style='padding-top: 40px;'>To see a user's timeline, click on their handle</div>");
+        $body.append("<div id='tweetinput' style='padding-top: 40px;'>Tweet Here!<form onsubmit='return false;'><input id='sub' type='text'><input type='submit' value='Tweet it, dude'></form><br><br><button onclick='login()'>Login</button><br></div><div id='timeline' style='padding-top: 40px;'>To see a user's timeline, click on their handle</div>");
 
         // generate random tweets every 3 seconds
         setInterval(function(){
