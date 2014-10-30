@@ -17,9 +17,10 @@
               alert("You must be joking...How do you expect to tweet if you don't log in?");
 
               $('span').remove();
+              $('#logout').css('display','none');
 
               // Show visitor logged in...
-              $('button').after("<span style='display:none'>  You are currently logged out.  You will need to enter your name to tweet!</span>");
+              $('#login').after("<span style='display:none'>  You are currently logged out.  You will need to enter your name to tweet!</span>");
 
               $('span').fadeIn('slow');
             }
@@ -37,12 +38,24 @@
               $('span').remove();
 
               // Show visitor logged in...
-              $('button').after("<span style='display:none'>  You are now logged in as " + visitor + ".</span>");
+              $('#login').after("<span style='display:none'>  You are now logged in as " + visitor + ".</span>");
 
+              $('#logout').fadeIn('slow');
               $('span').fadeIn('slow');
 
             }
 
+          };
+
+          var logout = function() {
+            visitor = null;
+            $('span').remove();
+
+            // Show visitor logged in...
+            $('#login').after("<span style='display:none'>  You are currently logged out.  You will need to enter your name to tweet!</span>");
+
+            $('span').fadeIn('slow');
+            $('#logout').css('display','none');
           };
 
     </script>
@@ -92,7 +105,7 @@
           timelineFunc();
 
           // Add input fields
-        $body.append("<div id='tweetinput' style='padding-top: 40px;'>Tweet Here!<form onsubmit='return false;'><input id='sub' type='text'><input type='submit' value='Tweet it, dude'></form><br><br><button onclick='login()'>Login</button><br></div><div id='timeline' style='padding-top: 40px;'>To see a user's timeline, click on their handle</div>");
+        $body.append("<div id='tweetinput' style='padding-top: 40px;'>Tweet Here!<form onsubmit='return false;'><input id='sub' type='text'><input type='submit' value='Tweet it, dude'></form><br><br><button id='login' onclick='login()'>Login</button><br><br><button id='logout' onclick='logout()' style='display:none;'>Logout</button></div><div id='timeline' style='padding-top: 40px;'>To see a user's timeline, click on their handle</div>");
 
         // generate random tweets every 3 seconds
         setInterval(function(){
